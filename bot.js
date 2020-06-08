@@ -1,23 +1,27 @@
-const Discord = require("discord.js");
-const { prefix, token } = require("./config.json");
+require("dotenv").config({ path: "./src/config/.env" });
+const { 
+    Discord,
+    fs
+} = require("./src/utils/Imports");
+
+// Creates new Client
 const client = new Discord.Client();
 
-client.on("message", (message) => {
-  if (message.content === `${prefix}ping`) {
-    message.channel.send("Pong.");
-  } else if (message.content === `${prefix}beep`) {
-    message.channel.send("Boop.");
-  } else if (message.content === `${prefix}user-info`) {
-    message.channel.send(
-      `Your username: ${message.author.username}\nYour ID: ${message.author.id}`
-    );
-  } else if (message.content === `${prefix}server-info`) {
-    message.channel.send(
-      `Server name: ${message.guild.name}\nTotal members: ${message.guild.memberCount}`
-    );
-  }
-});
+// Imports and assigns the functions to an event
+client.on("ready", require("./src/bot/events/onReady"));
+client.on("message", require("./src/bot/events/onMessage"));
 
-// THIS  MUST  BE  THIS  WAY
+// Creates a new Collection for commands
+client.commands = new Discord.Collection();
 
-client.login(process.env.BOT_TOKEN); //BOT_TOKEN is the Client Secret
+// Finds all JavaScript files in "./src/bot/commands" 
+const commandFiles = fs.readdirSync("./src/bot/commands").filter(file => file.endsWith(".js"));
+// Loops trough all the file names and imports the code
+for(const file of commandFiles) {
+    const command = require(`./src/bot/commands/${file}`);
+    // Appends a new command to the Collection
+    client.commands.set(command.name.toUpperCase(), command);
+}
+
+// Bot login
+client.login(process.env.BOT_TOKEN);

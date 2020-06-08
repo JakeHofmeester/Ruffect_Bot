@@ -4,10 +4,10 @@
  * in this case it will call @function Example
  */
 module.exports = {
-    name: "Example",
-    execute: Example
+  name: "Example",
+  execute: Example,
 };
 
 function Example(msg, args) {
-    return msg.channel.send(`Hello! Your arguments: ${args.join(", ")}`);
+  return msg.channel.send(`Hello! ${args.join(", ")}`);
 }

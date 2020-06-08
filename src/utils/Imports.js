@@ -12,5 +12,7 @@
 module.exports = { 
     Discord: require("discord.js"),
     request: require("request"),
-    fs: require("fs")
+    fs: require("fs"),
+    Canvas: require("canvas"),
+    YAML: require("yaml")
 }

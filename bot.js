@@ -1,8 +1,11 @@
-require("dotenv").config({ path: "./src/config/.env" });
 const { 
     Discord,
-    fs
+    fs,
+    YAML
 } = require("./src/utils/Imports");
+
+require("dotenv").config({ path: "./src/config/.env" });
+global.gConfig = YAML.parse(fs.readFileSync("./src/config/config.yaml", "utf8"));
 
 // Creates new Client
 const client = new Discord.Client();

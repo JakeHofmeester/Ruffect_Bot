@@ -26,5 +26,5 @@ for(const file of commandFiles) {
     client.commands.set(command.name.toUpperCase(), command);
 }
 
-// Bot login
+// Bot login with token
 client.login(process.env.BOT_TOKEN);

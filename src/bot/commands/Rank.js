@@ -31,7 +31,7 @@ async function Rank(msg, args) {
   const userData = await getUserData({ msg, userId, platform });
   if (userData === null)
     return await msg.channel.send(
-      "Something went wrong with getting the data... Sorry :("
+      "Are you trying to overload our API? Stop spamming ya wanker!"
     );
   const { rankData, profileData } = userData;
   return await sendRankData({ msg, args, rankData, profileData });

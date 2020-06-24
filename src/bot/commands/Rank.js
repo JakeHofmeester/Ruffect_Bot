@@ -3,18 +3,22 @@ const {
   ranks,
   validPlatforms,
 } = require("../../files/rocket_league/rocket_league.json");
+
 module.exports = {
   name: "RANK",
   execute: Rank,
 };
+
 async function Rank(msg, args) {
-  if (msg.channel.id != global.gConfig.rank_channel) return; // checks for the rank channel
+  if (!global.gConfig.rank_channel.includes(msg.channel.id)) return; // checks for the rank channel
+
   const platform =
     args && args.length > 0 ? await args.shift().toLowerCase() : "xbox";
   if (!validPlatforms.find((pf) => pf === platform))
     return await msg.channel.send(
       `That is not a valid platform! Choose from: ${validPlatforms.join(", ")}`
     );
+
   let userId = await args.join("-");
   userId = !userId
     ? "Ruffect"
@@ -31,6 +35,7 @@ async function Rank(msg, args) {
   const { rankData, profileData } = userData;
   return await sendRankData({ msg, args, rankData, profileData });
 }
+
 async function getValidId(userId) {
   for await (let val of userId) {
     if (isNaN(val)) return await getIdFromUrl(userId);
@@ -43,6 +48,7 @@ async function getValidId(userId) {
     return jUser.response.steamid;
   }
 }
+
 async function getUserData({ msg, userId, platform }) {
   const steamCheckUrl = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_KEY}&steamids=${userId}`;
   const rankData = await getRankData({ msg, userId, platform });
@@ -85,6 +91,7 @@ async function getUserData({ msg, userId, platform }) {
   }
   return { rankData, profileData };
 }
+
 async function getRankData({ msg, userId, platform }) {
   const selectedAPI = {
     steam: async (userId) => await kyuuAPI(userId, "steam"),
@@ -131,6 +138,7 @@ async function getRankData({ msg, userId, platform }) {
     }
   }
 }
+
 async function sendRankData({ msg, rankData, profileData }) {
   if (!rankData)
     return msg.channel.send(
@@ -146,12 +154,13 @@ async function sendRankData({ msg, rankData, profileData }) {
     "rank.png"
   );
   const eRanks = new Discord.MessageEmbed()
-    .setColor("#2d51c9")
+    .setColor("#d0225a")
     .setTitle(`**${profileData.name.toUpperCase()}'S RANKS**`)
     .setImage("attachment://rank.png");
   if (profileData.url) eRanks.setURL(profileData.url);
   return await msg.channel.send({ files: [imageAttachment], embed: eRanks });
 }
+
 async function createImage({ msg, rankData, profileData }) {
   const iCard = await Canvas.loadImage("./src/files/rocket_league/card.png");
   const canvas = Canvas.createCanvas(iCard.width, iCard.height);
@@ -206,6 +215,7 @@ async function createImage({ msg, rankData, profileData }) {
   ctx.fillText(profileData.name, 40, canvas.height - 40);
   return canvas.toBuffer();
 }
+
 function getData(url, { json, headers }) {
   return new Promise(function (resolve, reject) {
     request(

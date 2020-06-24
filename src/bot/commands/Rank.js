@@ -148,11 +148,7 @@ async function sendRankData({ msg, rankData, profileData }) {
   const eRanks = new Discord.MessageEmbed()
     .setColor("#2d51c9")
     .setTitle(`**${profileData.name.toUpperCase()}'S RANKS**`)
-    .setImage("attachment://rank.png")
-    .setFooter(
-      `Powered by ${rankData.api}`,
-      "https://rocketleague.media.zestyio.com/Rocket-League-Logo-Full_On-Dark-Horizontal.f1cb27a519bdb5b6ed34049a5b86e317.png"
-    );
+    .setImage("attachment://rank.png");
   if (profileData.url) eRanks.setURL(profileData.url);
   return await msg.channel.send({ files: [imageAttachment], embed: eRanks });
 }
